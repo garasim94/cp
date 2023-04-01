@@ -15,6 +15,7 @@ public class Trip {
     private User author;
     private String filename;
 
+
     public Trip() {
     }
 
