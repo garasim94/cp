@@ -18,6 +18,7 @@ public class Trip {
     public Trip() {
     }
 
+
     public Trip(String text, String tag, User user) {
         this.text = text;
         this.tag = tag;
