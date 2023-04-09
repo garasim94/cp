@@ -1,5 +1,10 @@
 <#include "security.ftlh">
 <#macro login path isRegisterForm>
+    <style>
+        .caps-lock-notification {
+            display: none;
+        }
+    </style>
     <form action="${path}" method="post">
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">User Name :</label>
@@ -34,6 +39,8 @@
                 capsLockNotification.style.display = "none";
             }
         });
+
+
         // function checkCapsLock(e) {
         //     var capsLockOn = e.getModifierState && e.getModifierState('CapsLock');
         //     var msg = document.getElementById("caps-lock-msg");
