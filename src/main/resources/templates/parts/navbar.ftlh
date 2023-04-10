@@ -21,6 +21,9 @@
                     <a class="nav-link" href="/user">User list</a>
                 </li>
             </#if>
+            <li class="nav-item">
+                <a class="nav-link" href="/trains">Trains</a>
+            </li>
         </ul>
         </#if>
         <div class="navbar-text mr-3 justify-content-end" >${name}</div>

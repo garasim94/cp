@@ -2,26 +2,18 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.Role;
 import com.example.demo.domain.Trip;
-import com.example.demo.domain.Trip;
 import com.example.demo.domain.User;
 import com.example.demo.repos.TripRepo;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 public class MainController {
@@ -38,11 +30,11 @@ public class MainController {
     }
 
     @GetMapping("/main")
-    public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
+    public String main(@RequestParam(required = false, defaultValue = "")Integer filter, Model model) {
         Iterable<Trip> trips = tripRepo.findAll();
         List<User> drivers= userService.getUsersByRole(Role.DRIVER);
-        if (filter != null && !filter.isEmpty()) {
-            trips = tripRepo.findByTag(filter);
+        if (filter != null) {
+            trips = tripRepo.findByRouteNumber(filter);
         } else {
             trips = tripRepo.findAll();
         }
@@ -53,37 +45,37 @@ public class MainController {
         return "main";
     }
 
-    @PostMapping("/main/save")
-    public String add(
-//            @AuthenticationPrincipal User user,
-            //            @RequestParam("file") MultipartFile file
-            @RequestParam("id") Long userId,
-            @RequestParam String text,
-            @RequestParam String tag, Map<String, Object> model) throws IOException {
-        User user=userService.getUserById(userId);
-        Trip trip = new Trip(text, tag, user);
-
-//        if (file != null && !file.getOriginalFilename().isEmpty()) {
-//            File uploadDir = new File(uploadPath);
+//    @PostMapping("/main/save")
+//    public String add(
+////            @AuthenticationPrincipal User user,
+//            //            @RequestParam("file") MultipartFile file
+//            @RequestParam("id") Long userId,
+//            @RequestParam String text,
+//            @RequestParam String tag, Map<String, Object> model) throws IOException {
+//        User user=userService.getUserById(userId);
+//        Trip trip = new Trip(text, tag, user);
 //
-//            if (!uploadDir.exists()) {
-//                uploadDir.mkdir();
-//            }
+////        if (file != null && !file.getOriginalFilename().isEmpty()) {
+////            File uploadDir = new File(uploadPath);
+////
+////            if (!uploadDir.exists()) {
+////                uploadDir.mkdir();
+////            }
+////
+////            String uuidFile = UUID.randomUUID().toString();
+////            String resultFilename = uuidFile + "." + file.getOriginalFilename();
+////
+////            file.transferTo(new File(uploadPath + "/" + resultFilename));
+////
+////            trip.setFilename(resultFilename);
+////        }
 //
-//            String uuidFile = UUID.randomUUID().toString();
-//            String resultFilename = uuidFile + "." + file.getOriginalFilename();
+//        tripRepo.save(trip);
 //
-//            file.transferTo(new File(uploadPath + "/" + resultFilename));
+//        Iterable<Trip> trips = tripRepo.findAll();
 //
-//            trip.setFilename(resultFilename);
-//        }
-
-        tripRepo.save(trip);
-
-        Iterable<Trip> trips = tripRepo.findAll();
-
-        model.put("trips", trips);
-
-        return "redirect:/main";
-    }
+//        model.put("trips", trips);
+//
+//        return "redirect:/main";
+//    }
 }

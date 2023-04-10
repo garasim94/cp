@@ -52,7 +52,7 @@
                 </#if>
                 <div class="m-2">
                     <span>${trip.text}</span>
-                    <i>${trip.tag}</i>
+                    <i>${trip.routeNumber}</i>
                 </div>
                 <div class="card-footer text-muted">
                     ${trip.authorName}

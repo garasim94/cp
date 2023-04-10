@@ -2,32 +2,36 @@ package com.example.demo.domain;
 
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Trip {
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+
+
+
+    private Integer routeNumber;
     private String text;
-    private String tag;
+
+    private String route;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
-    private String filename;
 
+    @OneToMany(mappedBy = "trip")
+    private Set<TrainTrip> trainTrips;
 
     public Trip() {
     }
 
-
-    public Trip(String text, String tag, User user) {
+    public Trip(Integer id, String text, String filename, User author, Set<TrainTrip> trainTrips) {
+        this.id = id;
         this.text = text;
-        this.tag = tag;
-        this.author= user;
-    }
-
-    public String getAuthorName(){
-        return author!=null ? author.getUsername():"<none>";
+        this.author = author;
+        this.trainTrips = trainTrips;
     }
 
     public Integer getId() {
@@ -46,13 +50,6 @@ public class Trip {
         this.text = text;
     }
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 
     public User getAuthor() {
         return author;
@@ -62,11 +59,35 @@ public class Trip {
         this.author = author;
     }
 
-    public String getFilename() {
-        return filename;
+    public Set<TrainTrip> getTrainTrips() {
+        return trainTrips;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setTrainTrips(Set<TrainTrip> trainTrips) {
+        this.trainTrips = trainTrips;
+    }
+    public Integer getRouteNumber() {
+        return routeNumber;
+    }
+
+    public void setRouteNumber(Integer routeNumber) {
+        this.routeNumber = routeNumber;
+    }
+
+    public String getRoute() {
+        return route;
+    }
+
+    public void setRoute(String route) {
+        this.route = route;
+    }
+
+    public Trip(Integer id, Integer routeNumber, String text, String route, User author, Set<TrainTrip> trainTrips) {
+        this.id = id;
+        this.routeNumber = routeNumber;
+        this.text = text;
+        this.route = route;
+        this.author = author;
+        this.trainTrips = trainTrips;
     }
 }
