@@ -5,8 +5,7 @@ import com.example.demo.repos.TrainRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TrainService {
@@ -29,4 +28,13 @@ public class TrainService {
     public void deleteTrain(Train train) {
         trainRepo.delete(train);
     }
+    public List<Train> searchTrains(String query) {
+        List<Train> trainsByNumber = trainRepo.searchByTrainNumber(query);
+        List<Train> trainsByName = trainRepo.searchByTrainName(query);
+        Set<Train> trainsSet = new HashSet<>();
+        trainsSet.addAll(trainsByNumber);
+        trainsSet.addAll(trainsByName);
+        return new ArrayList<>(trainsSet);
+    }
+
 }

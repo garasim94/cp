@@ -14,7 +14,7 @@
                 <label for="trainName">Train Name</label>
                 <input type="text" class="form-control" id="trainName" name="trainName" required>
             </div>
-
+            <input type="hidden" name="_csrf" value="${_csrf.token}" />
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>
