@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -45,6 +46,14 @@ public class TrainController {
         }
         model.addAttribute("train", train);
         return "edit-train";
+    }
+
+    @GetMapping("/trains/search")
+    public ModelAndView searchTrains(@RequestParam("query") String query) {
+        List<Train> trains = trainService.searchTrains(query);
+        ModelAndView modelAndView = new ModelAndView("parts/trains-table");
+        modelAndView.addObject("trains", trains);
+        return modelAndView;
     }
 
     @PostMapping("/trains/{id}/update")
