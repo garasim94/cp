@@ -8,7 +8,7 @@ public class Train {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     private String trainNumber;
     private String trainName;
@@ -21,18 +21,18 @@ public class Train {
     public Train() {
     }
 
-    public Train(Integer id, String trainNumber, String trainName, Set<TrainTrip> trainTrips) {
+    public Train(Long id, String trainNumber, String trainName, Set<TrainTrip> trainTrips) {
         this.id = id;
         this.trainNumber = trainNumber;
         this.trainName = trainName;
         this.trainTrips = trainTrips;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
