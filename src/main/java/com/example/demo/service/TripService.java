@@ -21,7 +21,7 @@ public class TripService {
     }
 
 
-    public Trip getTripById(Integer id) {
+    public Trip getTripById(Long id) {
         return tripRepo.findById(id).orElse(null);
     }
 }

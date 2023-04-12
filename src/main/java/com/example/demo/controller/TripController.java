@@ -33,7 +33,7 @@ public class TripController {
     @PostMapping("/trips/create")
     public String saveTrip(@RequestParam("text") String text,
                            @RequestParam("routeNumber") Integer routeNumber,
-                           @RequestParam("trainId") Integer trainId,
+                           @RequestParam("trainId") Long trainId,
                            @RequestParam("authorId") Long authorId,
                            Model model) {
         User author = userService.getUserById(authorId);

@@ -20,7 +20,7 @@ public class TrainTripService {
         return trainTripRepo.findAll();
     }
 
-    public TrainTrip getTrainTripById(Integer id) {
+    public TrainTrip getTrainTripById(Long id) {
         return trainTripRepo.findById(id).orElse(null);
     }
 }

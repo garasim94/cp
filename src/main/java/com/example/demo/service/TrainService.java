@@ -16,7 +16,7 @@ public class TrainService {
         return trainRepo.findAll();
     }
 
-    public Train getTrainById(Integer id) {
+    public Train getTrainById(Long id) {
         Optional<Train> trainOptional = trainRepo.findById(id);
         return trainOptional.orElse(null);
     }

@@ -9,7 +9,7 @@ public class Trip {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
 
 
@@ -21,24 +21,24 @@ public class Trip {
     @JoinColumn(name = "user_id")
     private User author;
 
-    @OneToMany(mappedBy = "trip")
-    private Set<TrainTrip> trainTrips;
+    @OneToOne(mappedBy = "trip")
+    private TrainTrip trainTrips;
 
     public Trip() {
     }
 
-    public Trip(Integer id, String text, String filename, User author, Set<TrainTrip> trainTrips) {
+    public Trip(Long id, String text, String filename, User author, TrainTrip trainTrips) {
         this.id = id;
         this.text = text;
         this.author = author;
         this.trainTrips = trainTrips;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -59,11 +59,11 @@ public class Trip {
         this.author = author;
     }
 
-    public Set<TrainTrip> getTrainTrips() {
+    public TrainTrip getTrainTrips() {
         return trainTrips;
     }
 
-    public void setTrainTrips(Set<TrainTrip> trainTrips) {
+    public void setTrainTrips(TrainTrip trainTrips) {
         this.trainTrips = trainTrips;
     }
     public Integer getRouteNumber() {
@@ -82,7 +82,7 @@ public class Trip {
         this.route = route;
     }
 
-    public Trip(Integer id, Integer routeNumber, String text, String route, User author, Set<TrainTrip> trainTrips) {
+    public Trip(Long id, Integer routeNumber, String text, String route, User author, TrainTrip trainTrips) {
         this.id = id;
         this.routeNumber = routeNumber;
         this.text = text;

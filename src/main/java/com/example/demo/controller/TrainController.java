@@ -39,7 +39,7 @@ public class TrainController {
     }
 
     @GetMapping("/trains/{id}/edit")
-    public String editTrainForm(@PathVariable("id") Integer id, Model model) throws ResourceNotFoundException {
+    public String editTrainForm(@PathVariable("id") Long id, Model model) throws ResourceNotFoundException {
         Train train = trainService.getTrainById(id);
         if (train == null) {
             throw new ResourceNotFoundException("Train not found with id: " + id);
@@ -57,7 +57,7 @@ public class TrainController {
     }
 
     @PostMapping("/trains/{id}/update")
-    public String updateTrain(@PathVariable("id") Integer id,
+    public String updateTrain(@PathVariable("id") Long id,
                               @ModelAttribute("train") @Valid Train train,
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes) {
@@ -73,7 +73,7 @@ public class TrainController {
     }
 
     @PostMapping("/trains/{id}/delete")
-    public String deleteTrain(@PathVariable("id") Integer id,
+    public String deleteTrain(@PathVariable("id") Long id,
                               RedirectAttributes redirectAttributes) throws ResourceNotFoundException {
         Train train = trainService.getTrainById(id);
         if (train == null) {

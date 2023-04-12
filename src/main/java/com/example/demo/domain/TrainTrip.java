@@ -7,13 +7,13 @@ public class TrainTrip {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "train_id")
     private Train train;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
@@ -22,17 +22,17 @@ public class TrainTrip {
     public TrainTrip() {
     }
 
-    public TrainTrip(Integer id, Train train, Trip trip) {
+    public TrainTrip(Long id, Train train, Trip trip) {
         this.id = id;
         this.train = train;
         this.trip = trip;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
