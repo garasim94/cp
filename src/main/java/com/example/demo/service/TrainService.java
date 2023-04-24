@@ -3,6 +3,10 @@ package com.example.demo.service;
 import com.example.demo.domain.Train;
 import com.example.demo.repos.TrainRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,9 +15,9 @@ import java.util.*;
 public class TrainService {
     @Autowired
     private TrainRepo trainRepo;
-
+    public static final int ITEM_PER_PAGE=10;
     public List<Train> getAllTrains() {
-        return trainRepo.findAll();
+        return (List<Train>) trainRepo.findAll();
     }
 
     public Train getTrainById(Long id) {
@@ -28,13 +32,24 @@ public class TrainService {
     public void deleteTrain(Train train) {
         trainRepo.delete(train);
     }
-    public List<Train> searchTrains(String query) {
-        List<Train> trainsByNumber = trainRepo.searchByTrainNumber(query);
-        List<Train> trainsByName = trainRepo.searchByTrainName(query);
-        Set<Train> trainsSet = new HashSet<>();
-        trainsSet.addAll(trainsByNumber);
-        trainsSet.addAll(trainsByName);
-        return new ArrayList<>(trainsSet);
+
+    public Page<Train> getTrains(String query, String sort, String order, int pageNum) {
+        Sort.Direction direction = Sort.Direction.fromString(order);
+        Sort sorted = Sort.by(direction, sort);
+
+        Pageable  pageable = PageRequest.of(pageNum-1,ITEM_PER_PAGE,sorted);
+
+        if (query != null && !query.isEmpty()) {
+            return trainRepo.findAll(query,pageable);
+        }
+        return trainRepo.findAll(pageable);
+
+    }
+    public List<Train> findAll(){
+        return (List<Train>) trainRepo.findAll(Sort.by("id").ascending());
     }
 
+    public Optional<Train> findById(Long trainId) {
+        return trainRepo.findById(trainId);
+    }
 }
