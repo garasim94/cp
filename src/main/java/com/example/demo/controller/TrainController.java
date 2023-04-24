@@ -2,29 +2,30 @@ package com.example.demo.controller;
 
 import com.example.demo.Exceptions.ResourceNotFoundException;
 import com.example.demo.domain.Train;
+import com.example.demo.exporter.TrainExcelExporter;
 import com.example.demo.service.TrainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-@Controller
+@Controller()
 public class TrainController {
 
     @Autowired
     private TrainService trainService;
-
-    @GetMapping("/trains/create")
-    public String createTrainForm(Model model) {
-        model.addAttribute("train", new Train());
-        return "create-train";
-    }
 
     @PostMapping("/trains/create")
     public String saveTrain(@RequestParam("trainNumber") String trainNumber,
@@ -46,14 +47,6 @@ public class TrainController {
         }
         model.addAttribute("train", train);
         return "edit-train";
-    }
-
-    @GetMapping("/trains/search")
-    public ModelAndView searchTrains(@RequestParam("query") String query) {
-        List<Train> trains = trainService.searchTrains(query);
-        ModelAndView modelAndView = new ModelAndView("parts/trains-table");
-        modelAndView.addObject("trains", trains);
-        return modelAndView;
     }
 
     @PostMapping("/trains/{id}/update")
@@ -84,12 +77,49 @@ public class TrainController {
         redirectAttributes.addFlashAttribute("message", "Train deleted successfully!");
         return "redirect:/trains";
     }
-
     @GetMapping("/trains")
-    public String getAllTrains(Model model) {
-        List<Train> trains = trainService.getAllTrains();
+    public String firstPage(Model model){
+        return trainsByPage("",1,"id","asc",model);
+    }
+    @GetMapping("/trains/page/{pageNum}")
+    public String trainsByPage(@RequestParam(defaultValue = "") String query,
+                               @PathVariable(name = "pageNum") int pageNum,
+                               @RequestParam(defaultValue = "id") String sort,
+                               @RequestParam(defaultValue = "asc") String order,
+                               Model model) {
+        Page<Train> pageOfTrains = trainService.getTrains(query, sort, order,pageNum);
+        List<Train> trains= pageOfTrains.getContent();
+        Integer currentPage=pageNum;
+        Long startCount= Long.valueOf((pageNum-1)* trainService.ITEM_PER_PAGE+1);
+        Long endCount=startCount+trainService.ITEM_PER_PAGE-1;
+
+        model.addAttribute("totalItems",pageOfTrains.getTotalElements());
+        model.addAttribute("totalPages",pageOfTrains.getTotalPages());
+        model.addAttribute("currentPage",currentPage);
+        model.addAttribute("startCount",startCount);
+        model.addAttribute("endCount",endCount);
         model.addAttribute("trains", trains);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
+        model.addAttribute("query", query);
+
         return "trains";
+    }
+    @GetMapping("/trains/export")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        String headerKey="Content-Disposition";
+
+        DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+        String fileName = "train_" + currentDateTime + ".xlsx";
+        String headerValue = "attachment; filename=" + fileName;
+
+        response.setHeader(headerKey,headerValue);
+        List<Train> trains=trainService.findAll();
+
+        TrainExcelExporter excelExporter=new TrainExcelExporter(trains);
+        excelExporter.export(response);
     }
 }
 
