@@ -7,7 +7,7 @@ import java.util.Set;
 public class Train {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     private String trainNumber;
@@ -16,7 +16,6 @@ public class Train {
     @OneToMany(mappedBy = "train")
     private Set<TrainTrip> trainTrips;
 
-    // конструкторы, геттеры и сеттеры
 
     public Train() {
     }
