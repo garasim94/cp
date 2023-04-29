@@ -4,7 +4,9 @@
 <#include "parts/security.ftlh">
 
 <@c.page>
-    <div class="mb-1">Add new user</div>
-    ${trip!}
-    <@l.login "/registration" true />
+    <div class="container">
+        <div class="mb-1">Add new user</div>
+        ${trip!}
+        <@l.login "/registration" true />
+    </div>
 </@c.page>

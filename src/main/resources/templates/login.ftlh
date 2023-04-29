@@ -2,6 +2,8 @@
 <#import "parts/login.ftlh" as l>
 <#include "parts/security.ftlh">
 <@c.page>
-    Login page
-    <@l.login "/login" false/>
+    <div class="container">
+        Login page
+        <@l.login "/login" false/>
+    </div>
 </@c.page>
