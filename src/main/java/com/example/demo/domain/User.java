@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,12 +13,14 @@ import java.util.Set;
 @Table(name = "usr")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
     private boolean active;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Issue> issues;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
@@ -36,6 +39,8 @@ public class User implements UserDetails {
     }
 
     public User() {
+        this.roles= new HashSet<>();
+        this.issues=new HashSet<>();
     }
 
     public List<Trip> getTrips() {
@@ -118,8 +123,15 @@ public class User implements UserDetails {
     public Set<Role> getRoles() {
         return roles;
     }
+    public String getRolesString(){
+        String string = String.join(", ",this.roles.stream().map(Role::name).toArray(String[]::new));
+        return string;
+    }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+    public boolean hasTrip(){
+        return this.trips.isEmpty();
     }
 }
