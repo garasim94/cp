@@ -29,12 +29,12 @@
                 <h3 class="mr-2">Create new train:</h3>
                 <div class="form-group mt-3">
                     <form method="POST" action="/trips/save">
-                        <!-- Поле дата -->
+
                         <div class="form-group">
                             <label for="departureDate">Departure date:</label>
                             <input type="date" class="form-control" id="departureDate" name="departureDate" required>
                         </div>
-                        <!-- Поле время отправления -->
+
                         <div class="form-group">
                             <label for="departureTime">Departure time:</label>
                             <input type="time" class="form-control" id="departureTime" name="departureTime" required>
@@ -43,13 +43,13 @@
                             <label for="arrivalDate">Arrival date:</label>
                             <input type="date" class="form-control" id="arrivalDate" name="arrivalDate" required>
                         </div>
-                        <!-- Поле время прибытия -->
+
                         <div class="form-group">
                             <label for="arrivalTime">Arrival time:</label>
                             <input type="time" class="form-control" id="arrivalTime" name="arrivalTime" required>
                         </div>
 
-                        <!-- Остальные поля формы -->
+
                         <div class="form-group">
                             <label for="startPoint">Point of departure:</label>
                             <input type="text" class="form-control" id="startPoint" name="startPoint" required>
@@ -90,7 +90,7 @@
             </div>
         </div>
         <@c.search moduleUrl="/trips"></@c.search>
-        <div id="trips-table-container mt-2">
+        <div id="container">
             <table class="table ">
                 <thead>
                 <tr>
@@ -114,7 +114,7 @@
                     </tr>
                 <#else>
                     <#list tripList as trip>
-                        <tr>
+                        <tr class="${(trip.status == 'ACCEPT')?then('table-success',((trip.status == 'DENIED')?then ('table-danger', 'table-secondary')))}">
                             <td>${trip.id}</td>
                             <td>${trip.routeNumber}</td>
                             <td>${trip.departureDate}</td>
@@ -131,6 +131,9 @@
                                     <input type="hidden" name="_csrf" value="${_csrf.token}" />
                                     <button class="btn btn-danger btn-sm">Delete</button>
                                 </form>
+                                <#if !trip.isIssuesEmpty()>
+                                    <a href="/trips/issue/${trip.id}" ><i class="fa-solid fa-triangle-exclamation fa-xl" style="color: #ffff00;"></i></a>
+                                </#if>
                             </td>
                         </tr>
                     </#list>
