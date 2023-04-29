@@ -5,6 +5,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Trip {
@@ -29,9 +31,16 @@ public class Trip {
     @OneToOne(mappedBy = "trip")
     private TrainTrip trainTrips;
     public Trip() {
+        issues= new HashSet<>();
     }
 
-    public Trip(Long id, LocalDate departureDate, LocalDate arrivalDate, LocalTime departureTime, LocalTime arrivalTime, String startPoint, String endPoint, String routeNumber, User driver, TrainTrip trainTrips) {
+    @OneToMany(mappedBy = "trip")
+    private Set<Issue> issues;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public Trip(Long id, LocalDate departureDate, LocalDate arrivalDate, LocalTime departureTime, LocalTime arrivalTime, String startPoint, String endPoint, String routeNumber, User driver, TrainTrip trainTrips, Status status) {
         this.id = id;
         this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
@@ -42,6 +51,15 @@ public class Trip {
         this.routeNumber = routeNumber;
         this.driver = driver;
         this.trainTrips = trainTrips;
+        this.status = status;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getRouteNumber() {
@@ -126,4 +144,14 @@ public class Trip {
         this.trainTrips = trainTrips;
     }
 
+    public Set<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(Set<Issue> issues) {
+        this.issues = issues;
+    }
+    public boolean isIssuesEmpty(){
+        return issues.isEmpty();
+    }
 }
