@@ -18,11 +18,14 @@
                 </li>
                 <#if isAdmin>
                     <li class="nav-item">
-                        <a class="nav-link" href="/user">User list</a>
+                        <a class="nav-link" href="/users">User list</a>
                     </li>
                 </#if>
                 <li class="nav-item">
                     <a class="nav-link" href="/trains">Trains</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/driver_trips">Trips</a>
                 </li>
             </ul>
         </#if>

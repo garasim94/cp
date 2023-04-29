@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.Exceptions.ResourceNotFoundException;
+import com.example.demo.domain.Issue;
 import com.example.demo.domain.Train;
 import com.example.demo.exporter.TrainExcelExporter;
+import com.example.demo.service.IssueService;
 import com.example.demo.service.TrainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,14 +20,17 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Controller()
+@Controller
 public class TrainController {
 
     @Autowired
     private TrainService trainService;
+    @Autowired
+    private IssueService issueService;
 
     @PostMapping("/trains/create")
     public String saveTrain(@RequestParam("trainNumber") String trainNumber,
@@ -40,10 +45,11 @@ public class TrainController {
     }
 
     @GetMapping("/trains/{id}/edit")
-    public String editTrainForm(@PathVariable("id") Long id, Model model) throws ResourceNotFoundException {
+    public String editTrainForm(@PathVariable("id") Long id, Model model,RedirectAttributes redirectAttributes) throws ResourceNotFoundException {
         Train train = trainService.getTrainById(id);
         if (train == null) {
-            throw new ResourceNotFoundException("Train not found with id: " + id);
+            redirectAttributes.addFlashAttribute("message", "Train not found");
+            return "redirect:/trains";
         }
         model.addAttribute("train", train);
         return "edit-train";
@@ -57,8 +63,8 @@ public class TrainController {
         if (bindingResult.hasErrors()) {
             return "edit-train";
         }
-
         train.setId(id);
+        issueService.deleteIssueAfterEdit(trainService.getTrainById(id));
         trainService.saveTrain(train);
 
         redirectAttributes.addFlashAttribute("message", "Train updated successfully!");
@@ -121,5 +127,6 @@ public class TrainController {
         TrainExcelExporter excelExporter=new TrainExcelExporter(trains);
         excelExporter.export(response);
     }
+
 }
 

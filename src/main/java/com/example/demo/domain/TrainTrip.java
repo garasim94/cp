@@ -13,7 +13,7 @@ public class TrainTrip {
     @JoinColumn(name = "train_id")
     private Train train;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "trip_id")
     private Trip trip;
 

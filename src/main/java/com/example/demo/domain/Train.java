@@ -1,13 +1,14 @@
 package com.example.demo.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Train {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     private String trainNumber;
@@ -16,8 +17,19 @@ public class Train {
     @OneToMany(mappedBy = "train")
     private Set<TrainTrip> trainTrips;
 
+    @OneToMany(mappedBy = "train")
+    private Set<Issue> issues;
 
     public Train() {
+        this.issues=new HashSet<>();
+    }
+
+    public Set<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(Set<Issue> issues) {
+        this.issues = issues;
     }
 
     public Train(Long id, String trainNumber, String trainName, Set<TrainTrip> trainTrips) {
@@ -58,5 +70,12 @@ public class Train {
 
     public void setTrainTrips(Set<TrainTrip> trainTrips) {
         this.trainTrips = trainTrips;
+    }
+    public boolean hasTrip(){
+        return this.trainTrips.isEmpty();
+    }
+
+    public boolean isIssuesEmpty(){
+        return issues.isEmpty();
     }
 }
