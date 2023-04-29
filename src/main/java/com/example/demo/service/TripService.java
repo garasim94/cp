@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.Status;
 import com.example.demo.domain.Trip;
 import com.example.demo.repos.TripRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class TripService {
         return tripRepo.findById(id).orElse(null);
     }
 
-    public List<Trip> FindAll() {
+    public List<Trip> findAll() {
         return (List<Trip>) tripRepo.findAll(Sort.by("id").ascending());
     }
     public void deleteTrip(Trip trip){
@@ -43,6 +44,36 @@ public class TripService {
             return tripRepo.findAll(query,pageable);
         }
         return tripRepo.findAll(pageable);
+    }
 
+
+    public Page<Trip> getTrips(Long userId, String query, String sort, String order, int pageNum) {
+        Sort.Direction direction = Sort.Direction.fromString(order);
+        Sort sorted = Sort.by(direction, sort);
+        Pageable pageable = PageRequest.of(pageNum-1, ITEM_PER_PAGE, sorted);
+
+        if (query != null && !query.isEmpty()) {
+            return tripRepo.findAllByUserId(query, userId, pageable);
+        }
+        return tripRepo.findAllByUserId(userId,pageable);
+    }
+    public List<Trip> findAllByDriver(Long userId){
+        return tripRepo.findAllByDriver(userId);
+    }
+    public boolean changeStatus(Long id,String status) {
+        Trip trip= getTripById(id);
+        if(trip==null) return false;
+        switch (status) {
+            case "accept":
+                trip.setStatus(Status.ACCEPT);
+                break;
+            case "deny":
+                trip.setStatus(Status.DENIED);
+                break;
+            default:
+                return false;
+        }
+        tripRepo.save(trip);
+        return true;
     }
 }
