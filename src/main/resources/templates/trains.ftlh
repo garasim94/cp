@@ -64,25 +64,47 @@
                         </tr>
                     <#else>
                         <#list trains as train>
-                            <tr>
-                                <td>${train.id}</td>
-                                <td>${train.trainNumber}</td>
-                                <td>${train.trainName}</td>
-                                <td>
-                                    <a href="/trains/${train.id}/edit" class="btn btn-primary btn-sm">Edit</a>
-                                    <form action="/trains/${train.id}/delete" method="post" style="display: inline-block">
-                                        <input type="hidden" name="_csrf" value="${_csrf.token}" />
-                                        <button class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
+                            <#if !train.isIssuesEmpty()>
+                                <tr class="table-danger">
+                                    <td>${train.id}</td>
+                                    <td>${train.trainNumber}</td>
+                                    <td>${train.trainName}</td>
+                                    <td>
+                                        <a href="/trains/${train.id}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                        <#if train.hasTrip()>
+                                            <form action="/trains/${train.id}/delete" method="post" style="display: inline-block">
+                                                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                                                <button class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </#if>
+                                        <a href="/trains/issue/${train.id}" ><i class="fa-solid fa-triangle-exclamation fa-xl" style="color: #ffff00;"></i></a>
+                                    </td>
+                                </tr>
+                            </#if>
+                        </#list>
+                        <#list trains as train>
+                            <#if train.isIssuesEmpty()>
+                                <tr>
+                                    <td>${train.id}</td>
+                                    <td>${train.trainNumber}</td>
+                                    <td>${train.trainName}</td>
+                                    <td>
+                                        <a href="/trains/${train.id}/edit" class="btn btn-primary btn-sm">Edit</a>
+                                        <#if train.hasTrip()>
+                                            <form action="/trains/${train.id}/delete" method="post" style="display: inline-block">
+                                                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                                                <button class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </#if>
+                                    </td>
+                                </tr>
+                            </#if>
                         </#list>
                     </#if>
                     </tbody>
                 </table>
             </div>
         </div>
-
         <@c.pagination moduleUrl="/trains"></@c.pagination>
     </div>
 </@c.page>
