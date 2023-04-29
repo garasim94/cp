@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,6 +22,29 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "driver")
+    private List<Trip> trips;
+
+    public User(Long id, String username, String password, boolean active, Set<Role> roles, List<Trip> trips) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.roles = roles;
+        this.trips = trips;
+    }
+
+    public User() {
+    }
+
+    public List<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
+    }
 
     public boolean isAdmin() {
         return roles.contains(Role.ADMIN);

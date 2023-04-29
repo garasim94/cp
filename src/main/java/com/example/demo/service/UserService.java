@@ -28,5 +28,9 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepo.findById(id);
         return user.orElse(null);
     }
+
+    public Optional<User> findById(Long driverId) {
+        return userRepo.findById(driverId);
+    }
 }
 
