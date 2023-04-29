@@ -9,22 +9,22 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <#if hasRole>
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/main">Trip</a>
-            </li>
-            <#if isAdmin>
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/user">User list</a>
+                    <a class="nav-link" href="/">Home</a>
                 </li>
-            </#if>
-            <li class="nav-item">
-                <a class="nav-link" href="/trains">Trains</a>
-            </li>
-        </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="/trips">Trip</a>
+                </li>
+                <#if isAdmin>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user">User list</a>
+                    </li>
+                </#if>
+                <li class="nav-item">
+                    <a class="nav-link" href="/trains">Trains</a>
+                </li>
+            </ul>
         </#if>
         <div class="navbar-text mr-3 justify-content-end" >${name}</div>
         <@l.logout/>
