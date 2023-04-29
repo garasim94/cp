@@ -2,36 +2,70 @@ package com.example.demo.domain;
 
 
 import javax.persistence.*;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 
 @Entity
 public class Trip {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    private LocalDate departureDate;
+    private LocalDate arrivalDate;
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
+    private String startPoint;
+    private String endPoint;
 
+    private String routeNumber;
 
-    private Integer routeNumber;
-    private String text;
-
-    private String route;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private User author;
+    private User driver;
 
     @OneToOne(mappedBy = "trip")
     private TrainTrip trainTrips;
-
     public Trip() {
     }
 
-    public Trip(Long id, String text, String filename, User author, TrainTrip trainTrips) {
+    public Trip(Long id, LocalDate departureDate, LocalDate arrivalDate, LocalTime departureTime, LocalTime arrivalTime, String startPoint, String endPoint, String routeNumber, User driver, TrainTrip trainTrips) {
         this.id = id;
-        this.text = text;
-        this.author = author;
+        this.departureDate = departureDate;
+        this.arrivalDate = arrivalDate;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.routeNumber = routeNumber;
+        this.driver = driver;
         this.trainTrips = trainTrips;
+    }
+
+    public String getRouteNumber() {
+        return routeNumber;
+    }
+
+    public void setRouteNumber(String routeNumber) {
+        this.routeNumber = routeNumber;
+    }
+
+    public LocalDate getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(LocalDate departureDate) {
+        this.departureDate = departureDate;
+    }
+
+    public LocalDate getArrivalDate() {
+        return arrivalDate;
+    }
+
+    public void setArrivalDate(LocalDate arrivalDate) {
+        this.arrivalDate = arrivalDate;
     }
 
     public Long getId() {
@@ -42,21 +76,46 @@ public class Trip {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+
+    public LocalTime getDepartureTime() {
+        return departureTime;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setDepartureTime(LocalTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public LocalTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public String getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
     }
 
 
-    public User getAuthor() {
-        return author;
+    public User getDriver() {
+        return driver;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setDriver(User driver) {
+        this.driver = driver;
     }
 
     public TrainTrip getTrainTrips() {
@@ -66,28 +125,5 @@ public class Trip {
     public void setTrainTrips(TrainTrip trainTrips) {
         this.trainTrips = trainTrips;
     }
-    public Integer getRouteNumber() {
-        return routeNumber;
-    }
 
-    public void setRouteNumber(Integer routeNumber) {
-        this.routeNumber = routeNumber;
-    }
-
-    public String getRoute() {
-        return route;
-    }
-
-    public void setRoute(String route) {
-        this.route = route;
-    }
-
-    public Trip(Long id, Integer routeNumber, String text, String route, User author, TrainTrip trainTrips) {
-        this.id = id;
-        this.routeNumber = routeNumber;
-        this.text = text;
-        this.route = route;
-        this.author = author;
-        this.trainTrips = trainTrips;
-    }
 }
