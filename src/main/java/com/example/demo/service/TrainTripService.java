@@ -17,10 +17,18 @@ public class TrainTripService {
     }
 
     public List<TrainTrip> getAllTrainTrips() {
-        return trainTripRepo.findAll();
+        return (List<TrainTrip>) trainTripRepo.findAll();
     }
 
     public TrainTrip getTrainTripById(Long id) {
         return trainTripRepo.findById(id).orElse(null);
+    }
+
+    public void save(TrainTrip trainTrip) {
+        trainTripRepo.save(trainTrip);
+    }
+
+    public void delete(TrainTrip trainTrip) {
+        trainTripRepo.delete(trainTrip);
     }
 }

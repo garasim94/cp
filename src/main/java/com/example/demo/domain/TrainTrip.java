@@ -6,20 +6,24 @@ import javax.persistence.*;
 public class TrainTrip {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "train_id")
     private Train train;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
-    // конструкторы, геттеры и сеттеры
 
     public TrainTrip() {
+    }
+
+    public TrainTrip(Train train, Trip trip) {
+        this.train = train;
+        this.trip = trip;
     }
 
     public TrainTrip(Long id, Train train, Trip trip) {
