@@ -32,9 +32,10 @@ public class IssueController {
     private TrainService trainService;
 
     @PostMapping("/issue/save")
-    private ResponseEntity<String> saveIssue(@RequestParam String message,
-                                             @RequestParam Long tripId,
-                                             @RequestParam String type){
+    private String saveIssue(@RequestParam String message,
+                             @RequestParam Long tripId,
+                             @RequestParam String type,
+                             RedirectAttributes redirectAttributes){
         try {
             Trip trip=tripService.getTripById(tripId);
             trip.setStatus(Status.DENIED);
@@ -43,9 +44,9 @@ public class IssueController {
                 throw new Exception("Trip doesn't exist");
             switch(type){
                 case "trip":;
-                break;
+                    break;
                 case "train":;
-                break;
+                    break;
             }
             switch(type){
                 case "trip":trip.getIssues().add(issue);
@@ -59,9 +60,10 @@ public class IssueController {
             }
             issueService.save(issue);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while reporting issue: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("message","Error while reporting issue: " + e.getMessage());
         }
-        return ResponseEntity.ok("Issue has been reported successfully!");
+        redirectAttributes.addFlashAttribute("message","Issue has been reported successfully!");
+        return "redirect:/driver_trips";
     }
 
 

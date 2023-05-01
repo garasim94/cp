@@ -13,19 +13,28 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/trips">Trip</a>
-                </li>
+                <#if isDispatcher>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trips">Trip</a>
+                    </li>
+                </#if>
                 <#if isAdmin>
                     <li class="nav-item">
                         <a class="nav-link" href="/users">User list</a>
                     </li>
                 </#if>
+                <#if isDepotmanager>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trains">Trains</a>
+                    </li>
+                </#if>
+                <#if isDriver>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/driver_trips">Trips</a>
+                    </li>
+                </#if>
                 <li class="nav-item">
-                    <a class="nav-link" href="/trains">Trains</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/driver_trips">Trips</a>
+                    <a class="nav-link" href="/account">Profile</a>
                 </li>
             </ul>
         </#if>

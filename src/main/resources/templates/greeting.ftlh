@@ -1,6 +1,45 @@
 <#import "parts/common.ftlh" as c>
 
 <@c.page>
-    <h5>Hello, guest</h5>
-    <div>This is a simple app for transportation by rail transport</div>
+    <h1 class="mr-2">Actual trips</h1>
+    <@c.search moduleUrl="/"></@c.search>
+    <div id="container" class="mt-3">
+        <table class="table ">
+            <thead>
+            <tr>
+                <@c.sortColumn columnId="routeNumber" columnName="Route Number" moduleUrl="/"></@c.sortColumn>
+                <@c.sortColumn columnId="departureDate" columnName="Departure date" moduleUrl="/"></@c.sortColumn>
+                <@c.sortColumn columnId="arrivalDate" columnName="Arrival date" moduleUrl="/"></@c.sortColumn>
+                <@c.sortColumn columnId="departureTime" columnName="Departure time" moduleUrl="/"></@c.sortColumn>
+                <@c.sortColumn columnId="arrivalTime" columnName="Arrival time" moduleUrl="/"></@c.sortColumn>
+                <@c.sortColumn columnId="startPoint" columnName="Point of departure" moduleUrl="/"></@c.sortColumn>
+                <@c.sortColumn columnId="endPoint" columnName="Point of arrival" moduleUrl="/"></@c.sortColumn>
+                <@c.sortColumn columnId="trainTrips.train.trainName" columnName="Train" moduleUrl="/"></@c.sortColumn>
+            </tr>
+            </thead>
+            <tbody>
+            <#if tripList?size == 0>
+                <tr>
+                    <td colspan="5">There are no trips.</td>
+                </tr>
+            <#else>
+                <#list tripList as trip>
+                    <#if trip.status=='ACCEPT'>
+                    <tr>
+                        <td>${trip.routeNumber}</td>
+                        <td>${trip.departureDate}</td>
+                        <td>${trip.arrivalDate}</td>
+                        <td>${trip.departureTime}</td>
+                        <td>${trip.arrivalTime}</td>
+                        <td>${trip.startPoint}</td>
+                        <td>${trip.endPoint}</td>
+                        <td>${trip.trainTrips.train.trainName}</td>
+                    </tr>
+                    </#if>
+                </#list>
+            </#if>
+            </tbody>
+        </table>
+    </div>
+    <@c.pagination moduleUrl="/"></@c.pagination>
 </@c.page>
