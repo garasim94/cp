@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@Controller()
 public class TrainController {
 
     @Autowired

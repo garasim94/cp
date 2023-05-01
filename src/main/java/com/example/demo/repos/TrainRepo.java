@@ -24,4 +24,6 @@ public interface TrainRepo extends PagingAndSortingRepository<Train, Long>{
 
     @Query(value = "SELECT t FROM Train t WHERE EXISTS (SELECT i FROM Issue i WHERE i.train = t) ORDER BY t.id")
     Page<Train> findTrainsWithIssues(Pageable pageable);
+
+    Train findByTrainNumber(String trainNumber);
 }

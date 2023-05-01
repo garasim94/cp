@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.domain.Issue;
 import com.example.demo.domain.Status;
 import com.example.demo.domain.Train;
+import com.example.demo.domain.User;
 import com.example.demo.repos.TrainRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,4 +57,18 @@ public class TrainService {
     }
 
 
+    public boolean isTrainNumberUnique(Long id, String trainNumber) {
+        Train trainByTrainNumber=trainRepo.findByTrainNumber(trainNumber);
+        if(trainByTrainNumber==null){return true;
+        }
+        boolean isCreatingNew=(id==null);
+        if(isCreatingNew){
+            if(trainByTrainNumber!=null) return false;
+        }else {
+            if(trainByTrainNumber.getId()!=id){
+                return false;
+            }
+        }
+        return true;
+    }
 }

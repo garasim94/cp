@@ -28,7 +28,7 @@
             <div class="collapse" id="collapseForm">
                 <h3 class="mr-2">Create new train:</h3>
                 <div class="form-group mt-3">
-                    <form method="post" action="/trains/create">
+                    <form method="post" action="/trains/create" onsubmit="return checkTrainNumberUnique(this);">
                         <div class="form-group">
                             <label for="trainNumber">Train Number</label>
                             <input type="number" class="form-control" id="trainNumber" name="trainNumber" required>
@@ -105,7 +105,49 @@
                 </table>
             </div>
         </div>
+        <div class="modal fade text-center" id="modalDialog" role="alertdialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalTitle">Attention</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <span id="modalBody">A user with this username is already registered</span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="close btn btn-danger" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <@c.pagination moduleUrl="/trains"></@c.pagination>
+        <script>
+            function checkTrainNumberUnique(form){
+                url="/trains/check_train_number";
+                trainNumber=$("#trainNumber").val();
+                trainId=$("#id").val();
+                csrfValue=$("input[name='_csrf']").val();
+                params={id:trainId, trainNumber: trainNumber,_csrf:csrfValue};
+                const modal = new bootstrap.Modal(document.getElementById('modalDialog'));
+                $.post(url,params,function (response){
+                    if(response =="OK"){
+                        form.submit();
+                    }else if(response=="Duplicated"){
+                        modal.show();
+                    } else {
+                        alert("Unknown server response");
+                    }
+                }).fail(function () {
+                    alert("Can't connect to server");
+                });
+                return false;
+            }
+        </script>
     </div>
 </@c.page>
 
