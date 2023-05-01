@@ -9,10 +9,10 @@
             <div>
                 <table class="table">
                     <thead>
-                        <tr>
-                            <th>Issue description:</th>
-                            <th>Action:</th>
-                        </tr>
+                    <tr>
+                        <th>Issue description:</th>
+                        <th>Action:</th>
+                    </tr>
                     </thead>
                     <tbody>
                     <#if issues?size == 0>

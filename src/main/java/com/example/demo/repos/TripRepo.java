@@ -2,6 +2,7 @@ package com.example.demo.repos;
 
 
 import com.example.demo.domain.Trip;
+import com.example.demo.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,4 +39,8 @@ public interface TripRepo extends PagingAndSortingRepository<Trip, Long> {
 
     @Query("SELECT t FROM Trip t WHERE  t.driver.id = ?1")
     Page<Trip> findAllByUserId(Long userId, Pageable pageable);
+
+    Trip findByRouteNumber(String routeNumber);
+
+    List<Trip> findByDriver(User driver);
 }

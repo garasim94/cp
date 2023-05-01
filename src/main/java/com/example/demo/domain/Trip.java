@@ -21,7 +21,7 @@ public class Trip {
     private LocalTime arrivalTime;
     private String startPoint;
     private String endPoint;
-
+    @Column(unique = true)
     private String routeNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)

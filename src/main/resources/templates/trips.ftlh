@@ -28,11 +28,10 @@
             <div class="collapse" id="collapseForm">
                 <h3 class="mr-2">Create new train:</h3>
                 <div class="form-group mt-3">
-                    <form method="POST" action="/trips/save">
-
+                    <form method="POST" action="/trips/save" >
                         <div class="form-group">
                             <label for="departureDate">Departure date:</label>
-                            <input type="date" class="form-control" id="departureDate" name="departureDate" required>
+                            <input type="date" class="form-control" id="departureDate" name="departureDate" oninput="checkDepartureDate()" required>
                         </div>
 
                         <div class="form-group">
@@ -41,12 +40,12 @@
                         </div>
                         <div class="form-group">
                             <label for="arrivalDate">Arrival date:</label>
-                            <input type="date" class="form-control" id="arrivalDate" name="arrivalDate" required>
+                            <input type="date" class="form-control" id="arrivalDate" name="arrivalDate" required oninput="checkArrivalDate()">
                         </div>
 
                         <div class="form-group">
                             <label for="arrivalTime">Arrival time:</label>
-                            <input type="time" class="form-control" id="arrivalTime" name="arrivalTime" required>
+                            <input type="time" class="form-control" id="arrivalTime" name="arrivalTime" required oninput="checkArrivalTime()">
                         </div>
 
 
@@ -57,17 +56,17 @@
 
                         <div class="form-group">
                             <label for="endPoint">Point of arrival:</label>
-                            <input type="text" class="form-control" id="endPoint" name="endPoint" required>
+                            <input type="text" class="form-control" id="endPoint" name="endPoint" required oninput="checkEndPoint()">
                         </div>
 
                         <div class="form-group">
                             <label for="routeNumber">Route number:</label>
-                            <input type="number" class="form-control" id="routeNumber" name="routeNumber" required>
+                            <input type="number" class="form-control" id="routeNumber" name="routeNumber" required oninput="checkTripNumberUnique()">
                         </div>
 
                         <div class="form-group">
                             <label for="driverId">Driver:</label>
-                            <select id="driverId" name="driverId" class="form-control" required>
+                            <select id="driverId" name="driverId" class="form-control" required oninput="checkDriverIsFree()">
                                 <option selected disabled>-- Select a driver --</option>
                                 <#list driverList as driver>
                                     <option value="${driver.id}">${driver.username}</option>
@@ -76,7 +75,7 @@
                         </div>
                         <div class="form-group">
                             <label for="trainId">Train:</label>
-                            <select class="form-control" id="trainId" name="trainId" required>
+                            <select class="form-control" id="trainId" name="trainId" required oninput="checkTrainIsFree()">
                                 <option selected disabled>-- Select a train --</option>
                                 <#list trainList as train>
                                     <option value="${train.id}">${train.trainName}</option>
@@ -90,7 +89,7 @@
             </div>
         </div>
         <@c.search moduleUrl="/trips"></@c.search>
-        <div id="container">
+        <div id="container" class="mt-3">
             <table class="table ">
                 <thead>
                 <tr>
@@ -110,7 +109,7 @@
                 <tbody>
                 <#if tripList?size == 0>
                     <tr>
-                        <td colspan="5">There are no trains.</td>
+                        <td colspan="5">There are no trips.</td>
                     </tr>
                 <#else>
                     <#list tripList as trip>
@@ -142,5 +141,112 @@
             </table>
         </div>
         <@c.pagination moduleUrl="/trips"></@c.pagination>
+        <script type="text/javascript">
+            function checkDepartureDate(){
+                var currentDate = new Date();
+                var departureDate = new Date($('#departureDate').val());
+                if (departureDate < currentDate) {
+                    document.getElementById("departureDate").setCustomValidity("Departure date should be greater or equal to current date");
+                } else {
+                    document.getElementById("departureDate").setCustomValidity("");
+                }
+            }
+            function checkArrivalDate(){
+                var arrivalDate = new Date($('#arrivalDate').val());
+                var departureDate = new Date($('#departureDate').val());
+                if (arrivalDate < departureDate) {
+                    document.getElementById("arrivalDate").setCustomValidity("Arrival date should be greater or equal to departure date");
+                } else {
+                    document.getElementById("arrivalDate").setCustomValidity("");
+                }
+            }
+            function checkArrivalTime(){
+                var arrivalTime = $('#arrivalTime').val();
+                var departureTime = $('#departureTime').val();
+                var arrivalDate = new Date($('#arrivalDate').val());
+                var departureDate = new Date($('#departureDate').val());
+                if ((departureDate=== arrivalDate) && (departureTime >= arrivalTime)) {
+                    document.getElementById("arrivalTime").setCustomValidity("Arrival time should be greater than departure time on the same date");
+                } else {
+                    document.getElementById("arrivalTime").setCustomValidity("");
+                }
+            }
+            function checkEndPoint(){
+                var startPoint = $('#startPoint').val();
+                var endPoint = $('#endPoint').val();
+                if (startPoint === endPoint) {
+                    document.getElementById("endPoint").setCustomValidity("Point of departure and point of arrival should not be the same");
+                } else {
+                    document.getElementById("endPoint").setCustomValidity("");
+                }
+            }
+            function checkTripNumberUnique(){
+                url="/trips/check_trip_number";
+                routeNumber=$("#routeNumber").val();
+                tripId=$("#id").val();
+                csrfValue=$("input[name='_csrf']").val();
+                params={id:tripId, routeNumber: routeNumber,_csrf:csrfValue};
+                $.post(url,params,function (response){
+                    if(response ==="OK"){
+                        document.getElementById("routeNumber").setCustomValidity("");
+                    }else if(response==="Duplicated"){
+                        alert("Trip with this number is already exist");
+                        document.getElementById("routeNumber").setCustomValidity("Trip with this number is already exist");
+                    } else {
+                        alert("Unknown server response");
+                    }
+
+                }).fail(function () {
+                    alert("Can't connect to server");
+                });
+                return false;
+            }
+            function checkDriverIsFree(){
+                url="/trips/check_is_driver_free";
+                driverId=$("#driverId").val();
+                departureDate=$("#departureDate").val();
+                arrivalDate=$("#arrivalDate").val();
+                departureTime=$("#departureTime").val();
+                arrivalTime=$("#arrivalTime").val();
+                csrfValue=$("input[name='_csrf']").val();
+                params={id:driverId, departureDate: departureDate,arrivalDate: arrivalDate,departureTime: departureTime,arrivalTime: arrivalTime,_csrf:csrfValue};
+                $.post(url,params,function (response){
+                    if(response ==="OK"){
+                        document.getElementById("driverId").setCustomValidity("");
+                    }else if(response==="Duplicated"){
+                        document.getElementById("driverId").setCustomValidity("This driver is busy at that time");
+                    } else {
+                        alert("Unknown server response");
+                    }
+
+                }).fail(function () {
+                    alert("Can't connect to server");
+                });
+                return false;
+            }
+            function checkTrainIsFree(){
+                url="/trips/check_is_train_free";
+                trainId=$("#trainId").val();
+                departureDate=$("#departureDate").val();
+                arrivalDate=$("#arrivalDate").val();
+                departureTime=$("#departureTime").val();
+                arrivalTime=$("#arrivalTime").val();
+                csrfValue=$("input[name='_csrf']").val();
+                params={id:trainId, departureDate: departureDate,arrivalDate: arrivalDate,departureTime: departureTime,arrivalTime: arrivalTime,_csrf:csrfValue};
+                $.post(url,params,function (response){
+                    if(response ==="OK"){
+                        document.getElementById("trainId").setCustomValidity("");
+                    }else if(response==="Duplicated"){
+                        document.getElementById("trainId").setCustomValidity("This train is reserved at that time");
+                    } else {
+                        alert("Unknown server response");
+                    }
+
+                }).fail(function () {
+                    alert("Can't connect to server");
+                });
+                return false;
+            }
+        </script>
     </div>
 </@c.page>

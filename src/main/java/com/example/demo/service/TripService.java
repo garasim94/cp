@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.Status;
-import com.example.demo.domain.Trip;
+import com.example.demo.domain.*;
 import com.example.demo.repos.TripRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,12 +9,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
 public class TripService {
     @Autowired
     private TripRepo tripRepo;
+    @Autowired
+    private TrainTripService trainTripService;
     public static final int ITEM_PER_PAGE=10;
 
     public void saveTrip(Trip trip) {
@@ -74,6 +78,61 @@ public class TripService {
                 return false;
         }
         tripRepo.save(trip);
+        return true;
+    }
+
+    public boolean isTripNumberUnique(Long id, String routeNumber) {
+        Trip tripByTripNumber=tripRepo.findByRouteNumber(routeNumber);
+        if(tripByTripNumber==null){
+            return true;
+        }
+        boolean isCreatingNew=(id==null);
+        if(isCreatingNew){
+            if(tripByTripNumber!=null) return false;
+        }else {
+            if(tripByTripNumber.getId()!=id){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isDriverFree(User driver, String departureDate, String arrivalDate,String departureTime,String arrivalTime) {
+        List<Trip> trips = tripRepo.findByDriver(driver);
+        if(trips.isEmpty()) return true;
+        LocalDateTime newTripDepartureDateTime =LocalDateTime.of(LocalDate.parse(departureDate), LocalTime.parse(departureTime));
+        LocalDateTime newTripArrivalDateTime=LocalDateTime.of(LocalDate.parse(arrivalDate), LocalTime.parse(arrivalTime));
+        for (Trip trip : trips) {
+            LocalDateTime tripDepartureDateTime = LocalDateTime.of(trip.getDepartureDate(), trip.getDepartureTime());
+            LocalDateTime tripArrivalDateTime = LocalDateTime.of(trip.getArrivalDate(), trip.getArrivalTime());
+            if ((newTripDepartureDateTime.isEqual(tripDepartureDateTime) || newTripDepartureDateTime.isAfter(tripDepartureDateTime))
+                    && newTripDepartureDateTime.isBefore(tripArrivalDateTime)) {
+                return false;
+            }
+            if ((newTripArrivalDateTime.isEqual(tripDepartureDateTime) || newTripArrivalDateTime.isAfter(tripDepartureDateTime))
+                    && newTripArrivalDateTime.isBefore(tripArrivalDateTime)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean isTrainFree(Train train, String departureDate, String arrivalDate,String departureTime,String arrivalTime) {
+        List<TrainTrip> trainTrips = train.getTrainTrips().stream().toList();
+        if(trainTrips.isEmpty()) return true;
+        LocalDateTime newTripDepartureDateTime =LocalDateTime.of(LocalDate.parse(departureDate), LocalTime.parse(departureTime));
+        LocalDateTime newTripArrivalDateTime=LocalDateTime.of(LocalDate.parse(arrivalDate), LocalTime.parse(arrivalTime));
+        for (TrainTrip trainTrip : trainTrips) {
+            LocalDateTime tripDepartureDateTime = LocalDateTime.of(trainTrip.getTrip().getDepartureDate(), trainTrip.getTrip().getDepartureTime());
+            LocalDateTime tripArrivalDateTime = LocalDateTime.of(trainTrip.getTrip().getArrivalDate(), trainTrip.getTrip().getArrivalTime());
+            if ((newTripDepartureDateTime.isEqual(tripDepartureDateTime) || newTripDepartureDateTime.isAfter(tripDepartureDateTime))
+                    && newTripDepartureDateTime.isBefore(tripArrivalDateTime)) {
+                return false;
+            }
+            if ((newTripArrivalDateTime.isEqual(tripDepartureDateTime) || newTripArrivalDateTime.isAfter(tripDepartureDateTime))
+                    && newTripArrivalDateTime.isBefore(tripArrivalDateTime)) {
+                return false;
+            }
+        }
         return true;
     }
 }
