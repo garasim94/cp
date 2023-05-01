@@ -15,6 +15,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
     private boolean active;
@@ -51,13 +52,27 @@ public class User implements UserDetails {
         this.trips = trips;
     }
 
+    public Set<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(Set<Issue> issues) {
+        this.issues = issues;
+    }
+
     public boolean isAdmin() {
         return roles.contains(Role.ADMIN);
     }
-
-    public boolean isUser() {
-        return roles.contains(Role.USER);
+    public boolean isDepotmanager() {
+        return roles.contains(Role.DEPOTMANAGER);
     }
+    public boolean isDriver() {
+        return roles.contains(Role.DRIVER);
+    }
+    public boolean isDispatcher() {
+        return roles.contains(Role.DISPATCHER);
+    }
+
 
     public boolean hasRole(){
         return roles.isEmpty();

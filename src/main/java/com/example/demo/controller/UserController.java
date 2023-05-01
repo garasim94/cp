@@ -89,7 +89,6 @@ public class UserController {
                 user.getRoles().add(Role.valueOf(key));
             }
         }
-
         userService.saveUser(user);
 
         redirectAttributes.addFlashAttribute("message", "User updated successfully!");
@@ -103,6 +102,7 @@ public class UserController {
         User user= new User();
         user.setUsername(username);
         user.setPassword(password);
+
 
         Set<String> roles = Arrays.stream(Role.values())
                 .map(Role::name)

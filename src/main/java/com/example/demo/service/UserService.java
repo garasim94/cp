@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username);
     }
+
     public List<User> getUsersByRole(Role role) {
         return userRepo.findByRolesContaining(role);
     }
@@ -66,6 +68,31 @@ public class UserService implements UserDetailsService {
     }
     public List<User> findAll(){
         return (List<User>) userRepo.findAll(Sort.by("id").ascending());
+    }
+
+    public void updateUser(User user){
+
+        User existingUser=userRepo.findById(user.getId()).get();
+        if (user.getPassword()!=null){
+            existingUser.setPassword(user.getPassword());
+        }
+        existingUser.setUsername(user.getUsername());
+        userRepo.save(existingUser);
+    }
+
+    public boolean isUsernameUnique(Long id, String username) {
+        User userByEmail=userRepo.findByUsername(username);
+        if(userByEmail==null){return true;
+        }
+        boolean isCreatingNew=(id==null);
+        if(isCreatingNew){
+            if(userByEmail!=null) return false;
+        }else {
+            if(userByEmail.getId()!=id){
+                return false;
+            }
+        }
+        return true;
     }
 }
 

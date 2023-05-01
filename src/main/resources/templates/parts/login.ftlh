@@ -15,7 +15,7 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Password:</label>
             <div class="col-sm-6 input-group">
-                <input type="password"  id="password" name="password" class="form-control" placeholder="Password" required onkeyup="checkCapsLock(event)"/>
+                <input type="password"  id="password" name="password" class="form-control" placeholder="Password" minlength="8" maxlength="64" required onkeyup="checkCapsLock(event)"/>
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility()">
                         <i id="password-icon" class="fas fa-eye"></i>
@@ -25,7 +25,7 @@
             </div>
         </div>
         <input type="hidden" name="_csrf" value="${_csrf.token}" />
-        <#if !isRegisterForm><a href="/registration">Add new user</a></#if>
+        <#if !isRegisterForm><a href="/registration">Registration</a></#if>
         <button class="btn btn-primary" type="submit"><#if isRegisterForm>Create<#else>Login</#if></button>
     </form>
     <script>
@@ -40,17 +40,6 @@
             }
         });
 
-
-        // function checkCapsLock(e) {
-        //     var capsLockOn = e.getModifierState && e.getModifierState('CapsLock');
-        //     var msg = document.getElementById("caps-lock-msg");
-        //
-        //     if (capsLockOn) {
-        //         msg.style.display = 'block';
-        //     } else {
-        //         msg.style.display = 'none';
-        //     }
-        // }
         function togglePasswordVisibility() {
             var passwordInput = document.getElementById("password");
             var passwordIcon = document.getElementById("password-icon");

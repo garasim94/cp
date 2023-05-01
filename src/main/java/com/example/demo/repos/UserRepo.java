@@ -23,4 +23,5 @@ public interface UserRepo extends PagingAndSortingRepository<User,Long> {
     Page<User> findAll(String query, Pageable pageable);
     @Override
     Iterable<User> findAll(Sort sort);
+
 }

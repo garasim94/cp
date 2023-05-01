@@ -28,14 +28,14 @@
             <div class="collapse" id="collapseForm">
                 <h3 class="mr-2">Create new user:</h3>
                 <div class="form-group mt-3">
-                    <form method="post" action="/users/create">
+                    <form method="post" action="/users/create" onsubmit="return checkUsernameUnique(this);">
                         <div class="form-group">
                             <label for="username">Username:</label>
                             <input type="text" class="form-control" id="username" name="username" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password:</label>
-                            <input type="text" class="form-control" id="password" name="password" required>
+                            <input type="text" class="form-control" id="password" name="password" required minlength="8" maxlength="64">
                         </div>
                         <#list roles as role>
                             <div>
@@ -89,6 +89,49 @@
                 </table>
             </div>
         </div>
+        <div class="modal fade text-center" id="modalDialog" role="alertdialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalTitle">Attention</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <span id="modalBody">A user with this username is already registered</span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="close btn btn-danger" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function checkUsernameUnique(form){
+                url="/users/check_username";
+                username=$("#username").val();
+                userId=$("#id").val();
+                csrfValue=$("input[name='_csrf']").val();
+                params={id:userId, username: username,_csrf:csrfValue};
+                const modal = new bootstrap.Modal(document.getElementById('modalDialog'));
+                $.post(url,params,function (response){
+                    if(response =="OK"){
+                        form.submit();
+                    }else if(response=="Duplicated"){
+                        modal.show();
+                    } else {
+                        alert("Unknown server response");
+                    }
+
+                }).fail(function () {
+                    alert("Can't connect to server");
+                });
+                return false;
+            }
+        </script>
         <@c.pagination moduleUrl="/users"></@c.pagination>
     </div>
 </@c.page>

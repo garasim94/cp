@@ -101,26 +101,26 @@
                 </div>
             </div>
         </div>
-<#--        <div>-->
-<#--            <form method="post" action="/issue/save">-->
-<#--                <div class="form-group">-->
-<#--                    <label for="type">Select what is causing the problem </label>-->
-<#--                    <select class="form-control" id="type" name="type"   required>-->
-<#--                        <option selected disabled>-- Select --</option>-->
-<#--                        <option value="trip" selected>Trip</option>-->
-<#--                        <option value="train" selected>Train</option>-->
-<#--                    </select>-->
-<#--                </div>-->
-<#--                <div class="form-group">-->
-<#--                    <label for="message">Message:</label>-->
-<#--                    <input type="text" class="form-control" id="message" name="message" placeholder="Write down problem here..." required>-->
-<#--                </div>-->
-<#--                <input type="hidden" name="_csrf" value="${_csrf.token}" />-->
-<#--                <input type="hidden" name="tripId" value="${trip.id}" />-->
-<#--                <button type="submit" class="btn btn-primary">Save</button>-->
-<#--                <a href="/drivers_trips" class="btn btn-secondary">Cancel</a>-->
-<#--            </form>-->
-<#--        </div>-->
+        <#--        <div>-->
+        <#--            <form method="post" action="/issue/save">-->
+        <#--                <div class="form-group">-->
+        <#--                    <label for="type">Select what is causing the problem </label>-->
+        <#--                    <select class="form-control" id="type" name="type"   required>-->
+        <#--                        <option selected disabled>-- Select --</option>-->
+        <#--                        <option value="trip" selected>Trip</option>-->
+        <#--                        <option value="train" selected>Train</option>-->
+        <#--                    </select>-->
+        <#--                </div>-->
+        <#--                <div class="form-group">-->
+        <#--                    <label for="message">Message:</label>-->
+        <#--                    <input type="text" class="form-control" id="message" name="message" placeholder="Write down problem here..." required>-->
+        <#--                </div>-->
+        <#--                <input type="hidden" name="_csrf" value="${_csrf.token}" />-->
+        <#--                <input type="hidden" name="tripId" value="${trip.id}" />-->
+        <#--                <button type="submit" class="btn btn-primary">Save</button>-->
+        <#--                <a href="/drivers_trips" class="btn btn-secondary">Cancel</a>-->
+        <#--            </form>-->
+        <#--        </div>-->
         <script>
             $(document).ready(function(){
                 $("#myModal").on("show.bs.modal", function(event) {
@@ -137,15 +137,6 @@
                         url: $(this).attr("action"),
                         type: $(this).attr("method"),
                         data: formData,
-                        success: function(response){
-                            $("#myModal").modal("hide");
-                            alert("Issue has been reported successfully!");
-                            location.reload();
-                        },
-                        error: function(xhr, status, error){
-                            alert("Error while reporting issue: " + error);
-                        }
-
                     });
                 });
             });
