@@ -20,6 +20,12 @@
                     </#list>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="form-check-inline" for="isActive">
+                    <span class="form-check-label">Active:</span>
+                    <input type="checkbox" ${user.active?then("checked", "")} class="form-check-input ml-1" name="isActive" required>
+                </label>
+            </div>
             <input type="hidden" value="${user.id}" name="userId">
             <input type="hidden" value="${_csrf.token}" name="_csrf">
             <button type="submit" class="btn btn-primary">Save</button>

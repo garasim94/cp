@@ -74,26 +74,20 @@ public class UserController {
             @RequestParam String username,
             @RequestParam Map<String, String> form,
             @RequestParam("userId") User user,
+            @RequestParam("isActive") boolean isActive,
             RedirectAttributes redirectAttributes
-    ) {
+    )  {
         user.setUsername(username);
-
-        Set<String> roles = Arrays.stream(Role.values())
-                .map(Role::name)
-                .collect(Collectors.toSet());
-
+        user.setActive(isActive);
+        Set<String> roles = Arrays.stream(Role.values()).map(Role::name).collect(Collectors.toSet());
         user.getRoles().clear();
-
         for (String key : form.keySet()) {
             if (roles.contains(key)) {
-                user.getRoles().add(Role.valueOf(key));
-            }
-        }
-        userService.saveUser(user);
-
-        redirectAttributes.addFlashAttribute("message", "User updated successfully!");
-        return "redirect:/users";
-    }
+            user.getRoles().add(Role.valueOf(key));        }
+        }    userService.saveUser(user);
+        redirectAttributes.addFlashAttribute("message",
+                "User updated successfully!");
+        return "redirect:/users";}
     @PostMapping("/users/create")
     public String createUser(@RequestParam String username,
                              @RequestParam String password,
