@@ -165,7 +165,9 @@
                 var departureTime = $('#departureTime').val();
                 var arrivalDate = new Date($('#arrivalDate').val());
                 var departureDate = new Date($('#departureDate').val());
-                if ((departureDate=== arrivalDate) && (departureTime >= arrivalTime)) {
+
+                if ((departureDate.getTime()===arrivalDate.getTime())&&(departureTime >= arrivalTime)) {
+                    alert("Arrival time should be greater than departure time on the same date");
                     document.getElementById("arrivalTime").setCustomValidity("Arrival time should be greater than departure time on the same date");
                 } else {
                     document.getElementById("arrivalTime").setCustomValidity("");
