@@ -11,7 +11,7 @@
         <#if hasRole>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="/home">Home</a>
                 </li>
                 <#if isDispatcher>
                     <li class="nav-item">

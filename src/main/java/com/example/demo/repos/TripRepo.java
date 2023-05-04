@@ -32,6 +32,15 @@ public interface TripRepo extends PagingAndSortingRepository<Trip, Long> {
             "AND t.driver.id = ?2")
     Page<Trip> findAllByUserId(String query, Long userId, Pageable pageable);
 
+    @Query("SELECT t FROM Trip t WHERE " +
+            "LOWER(t.startPoint) LIKE LOWER(CONCAT('%', ?1, '%')) OR " +
+            "LOWER(t.endPoint) LIKE LOWER(CONCAT('%', ?1, '%')) OR " +
+            "t.routeNumber = ?1 OR " +
+            "LOWER(t.trainTrips.train.trainName) LIKE LOWER(CONCAT('%', ?1, '%'))"+
+            "AND t.status='ACCEPT'")
+    Page<Trip> findActualTrips(String query, Pageable pageable);
+    @Query("SELECT t FROM Trip t WHERE t.status='ACCEPT'")
+    Page<Trip> findActualTrips(Pageable pageable);
     @Query("SELECT t FROM Trip t WHERE t.driver.id = ?1")
     List<Trip> findAllByDriver(Long userId);
     @Override

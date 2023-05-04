@@ -50,7 +50,16 @@ public class TripService {
         return tripRepo.findAll(pageable);
     }
 
+    public Page<Trip> getActualTrips(String query, String sort, String order, int pageNum) {
+        Sort.Direction direction = Sort.Direction.fromString(order);
+        Sort sorted = Sort.by(direction, sort);
+        Pageable pageable = PageRequest.of(pageNum-1,ITEM_PER_PAGE,sorted);
 
+        if (query != null && !query.isEmpty()) {
+            return tripRepo.findActualTrips(query,pageable);
+        }
+        return tripRepo.findActualTrips(pageable);
+    }
     public Page<Trip> getTrips(Long userId, String query, String sort, String order, int pageNum) {
         Sort.Direction direction = Sort.Direction.fromString(order);
         Sort sorted = Sort.by(direction, sort);
